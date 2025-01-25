@@ -22,6 +22,7 @@ export default function NavBar() {
         <Link href="/">home</Link>
         <Link href="/decks">decks</Link>
         <Link href="/review">review</Link>
+        <Link href="/snippets">snippets</Link>
         {session ? (
           <button onClick={handleSignOut} className="text-red-200 hover:text-red-300">
             sign out
