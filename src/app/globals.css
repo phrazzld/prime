@@ -1,21 +1,112 @@
+/* fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=IBM+Plex+Sans:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* color variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --brand: #1c75bc; /* deep blue */
+  --brand-accent: #d4af37; /* gold */
+  --background-light: #ffffff;
+  --foreground-light: #121212;
+
+  --background-dark: #0e0e0e;
+  --foreground-dark: #eaeaea;
+
+  --transition-duration: 0.3s;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* light vs dark theme handling */
+[data-theme='light'] {
+  --background: var(--background-light);
+  --foreground: var(--foreground-light);
+}
+
+[data-theme='dark'] {
+  --background: var(--background-dark);
+  --foreground: var(--foreground-dark);
 }
 
 body {
-  color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--foreground);
+  transition:
+    background var(--transition-duration) ease,
+    color var(--transition-duration) ease;
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--brand);
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+a, button {
+  transition:
+    color var(--transition-duration) ease,
+    background var(--transition-duration) ease,
+    border-color var(--transition-duration) ease;
+}
+
+/* nav links hover */
+nav a:hover {
+  color: var(--brand-accent); /* gold accent for hover */
+}
+
+/* button styles */
+.btn {
+  padding: 0.6rem 1.2rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--brand);
+  color: #fff;
+  border-radius: 0.375rem;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  background-color: var(--brand-accent);
+  color: var(--foreground-dark);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* subtle fade animation */
+.fade-in {
+  opacity: 0;
+  transform: translateY(5px);
+  animation: fadeInUp 0.6s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* cards and containers */
+.card {
+  background-color: var(--background);
+  border: 1px solid var(--foreground-dark);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow var(--transition-duration) ease;
+}
+
+.card:hover {
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
 }
