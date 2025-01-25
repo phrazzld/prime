@@ -28,7 +28,7 @@ export default function HomePage() {
         <p className="mb-6">
           your personal space to shape knowledge, because spaced repetition is the new black.
         </p>
-        <Link href="/signup" className="btn">
+        <Link href="/login" className="btn">
           sign up now
         </Link>
       </div>

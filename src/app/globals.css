@@ -60,6 +60,15 @@ a, button {
     border-color var(--transition-duration) ease;
 }
 
+input, textarea {
+  color: var(--foreground);
+  background-color: var(--background);
+  border: 1px solid var(--foreground-dark);
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
 /* nav links hover */
 nav a:hover {
   color: var(--brand-accent); /* gold accent for hover */
