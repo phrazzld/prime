@@ -33,8 +33,8 @@ export default function HomePage() {
 
         setCardsDue(count || 0);
       } catch (error) {
-        console.error('Error fetching cards:', error);
-        setErrorMessage(error instanceof Error ? error.message : 'Failed to load cards');
+        console.error('error fetching cards:', error);
+        setErrorMessage(error instanceof Error ? error.message : 'failed to load cards');
         setCardsDue(null);
       } finally {
         setIsLoadingCards(false);
@@ -46,16 +46,16 @@ export default function HomePage() {
 
   const getTimeBasedGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return 'good morning';
+    if (hour < 18) return 'good afternoon';
+    return 'good evening';
   };
 
   if (authLoading) {
     return (
       <div className="flex flex-col items-center gap-4 fade-in">
         <IconLoader className="animate-spin text-brand h-12 w-12" />
-        <p className="text-foreground-muted">Checking session...</p>
+        <p className="text-foreground/70">checking session...</p>
       </div>
     );
   }
@@ -63,26 +63,25 @@ export default function HomePage() {
   if (!session) {
     return (
       <div className="fade-in text-center">
-        <h1 className="text-4xl mb-4 font-bold bg-gradient-to-r from-brand to-brand-accent bg-clip-text text-transparent">
-          Welcome to Prime
+        <h1 className="text-4xl mb-4 font-bold">
+          welcome to prime
         </h1>
-        <p className="mb-6 text-lg text-foreground-muted max-w-2xl mx-auto">
-          Your AI-powered learning companion. We combine spaced repetition with adaptive learning
-          to help you master anything.
+        <p className="mb-6 text-lg text-foreground/70 max-w-2xl mx-auto">
+          your ai-powered learning companion. we combine spaced repetition with adaptive learning to help you master anything.
         </p>
         <Link href="/login" className="btn px-8 py-4 text-lg hover:scale-105 transform transition">
-          Start Learning Now
+          start learning now
         </Link>
       </div>
     );
   }
 
-  // User is logged in - handle card states
+  // user is logged in - handle card states
   return (
     <div className="fade-in">
-      <h1 className="text-3xl mb-2 flex items-center gap-3">
+      <h1 className="text-3xl mb-2 flex items-center gap-3 font-bold">
         <IconBrain className="w-8 h-8 text-brand-accent" />
-        {getTimeBasedGreeting()}, Learner!
+        {getTimeBasedGreeting()}, learner!
       </h1>
 
       {errorMessage && (
@@ -92,15 +91,15 @@ export default function HomePage() {
             onClick={() => window.location.reload()}
             className="mt-2 text-sm underline hover:text-red-200"
           >
-            Try Again
+            try again
           </button>
         </div>
       )}
 
       {isLoadingCards ? (
-        <div className="flex items-center gap-3 text-foreground-muted">
+        <div className="flex items-center gap-3 text-foreground/70">
           <IconLoader className="animate-spin h-5 w-5" />
-          Checking your review queue...
+          checking your review queue...
         </div>
       ) : (
         <div className="space-y-6">
@@ -108,40 +107,39 @@ export default function HomePage() {
             <div className="p-6 bg-brand/10 rounded-xl border border-brand/20 text-center">
               <IconConfetti className="w-12 h-12 mx-auto text-brand-accent mb-4" />
               <p className="text-xl mb-4">
-                All caught up! You're rocking it 🎉
+                all caught up! you’re rocking it 🎉
               </p>
               <div className="flex justify-center gap-4">
                 <Link href="/decks" className="btn bg-brand-accent hover:bg-brand-accent/90">
-                  Explore Decks
+                  explore decks
                 </Link>
                 <Link
                   href="/snippets"
                   className="btn bg-transparent border border-brand text-brand hover:bg-brand/10"
                 >
-                  Add Content
+                  add content
                 </Link>
               </div>
             </div>
           ) : (
             <div className="group relative p-6 bg-gradient-to-br from-brand/20 to-brand-accent/5 rounded-xl border border-brand/20 transition-all hover:border-brand/40">
-              <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
+              <div className="absolute inset-0 pointer-events-none opacity-5" />
               <p className="text-xl mb-4">
-                You have <span className="text-brand-accent font-bold">{cardsDue}</span> cards
-                waiting in your review queue.
+                you have <span className="text-brand-accent font-bold">{cardsDue}</span> cards waiting in your review queue.
               </p>
               <div className="flex items-center gap-4">
                 <Link
                   href="/review"
                   className="btn px-6 py-3 flex items-center gap-2 hover:scale-105 transform transition"
                 >
-                  Start Review Session
+                  start review session
                   <span className="animate-pulse">🚀</span>
                 </Link>
                 <Link
                   href="/decks"
-                  className="text-foreground-muted hover:text-foreground transition"
+                  className="text-foreground/70 hover:text-foreground transition"
                 >
-                  Manage Decks →
+                  manage decks →
                 </Link>
               </div>
             </div>

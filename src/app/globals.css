@@ -1,6 +1,4 @@
-/* fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=IBM+Plex+Sans:wght@400;500;700&display=swap');
-
+/* import tailwind layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,6 +7,7 @@
 :root {
   --brand: #1c75bc; /* deep blue */
   --brand-accent: #d4af37; /* gold */
+
   --background-light: #ffffff;
   --foreground-light: #121212;
 
@@ -16,9 +15,10 @@
   --foreground-dark: #eaeaea;
 
   --transition-duration: 0.3s;
+  --code-font: 'JetBrains Mono', monospace;
 }
 
-/* light vs dark theme handling */
+/* theme handling */
 [data-theme='light'] {
   --background: var(--background-light);
   --foreground: var(--foreground-light);
@@ -29,76 +29,75 @@
   --foreground: var(--foreground-dark);
 }
 
+/* body defaults */
 body {
   background: var(--background);
   color: var(--foreground);
-  transition:
-    background var(--transition-duration) ease,
-    color var(--transition-duration) ease;
-  font-family: 'IBM Plex Sans', Arial, sans-serif;
+  transition: background var(--transition-duration) ease, color var(--transition-duration) ease;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  font-variant-ligatures: common-ligatures;
 }
 
-/* headings */
+/* code blocks, if any appear */
+code, pre {
+  font-family: var(--code-font);
+}
+
+/* headings in a minimal style */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', Georgia, serif;
+  margin: 0 0 0.75rem;
+  font-weight: 700;
   color: var(--brand);
 }
 
-h1 {
-  font-size: 2.5rem;
-  line-height: 1.2;
-}
-
-h2 {
-  font-size: 2rem;
-}
-
+/* links and buttons */
 a, button {
-  transition:
-    color var(--transition-duration) ease,
-    background var(--transition-duration) ease,
-    border-color var(--transition-duration) ease;
+  text-decoration: none;
+  transition: color var(--transition-duration) ease, background var(--transition-duration) ease, border-color var(--transition-duration) ease, transform 0.1s ease;
+  cursor: pointer;
 }
 
-input, textarea {
-  color: var(--foreground);
-  background-color: var(--background);
-  border: 1px solid var(--foreground-dark);
-  border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-}
-
-/* nav links hover */
-nav a:hover {
-  color: var(--brand-accent); /* gold accent for hover */
-}
-
-/* button styles */
+/* subtle button style */
 .btn {
   padding: 0.6rem 1.2rem;
   font-weight: 500;
-  text-transform: uppercase;
+  text-transform: lowercase;
   letter-spacing: 0.05em;
   background-color: var(--brand);
   color: #fff;
-  border-radius: 0.375rem;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+  box-shadow: none;
+  border: none;
 }
 
+/* ephemeral swirl on click + hover highlight */
 .btn:hover {
   background-color: var(--brand-accent);
   color: var(--foreground-dark);
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+.btn:active {
+  animation: swirl 0.1s ease-in-out;
+}
+@keyframes swirl {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.04) rotate(3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }
 
-/* subtle fade animation */
+/* subtle fade animation for elements */
 .fade-in {
   opacity: 0;
-  transform: translateY(5px);
+  transform: translateY(4px);
   animation: fadeInUp 0.6s forwards;
 }
-
 @keyframes fadeInUp {
   to {
     opacity: 1;
@@ -106,16 +105,25 @@ nav a:hover {
   }
 }
 
-/* cards and containers */
+/* form inputs */
+input, textarea {
+  color: var(--foreground);
+  background-color: var(--background);
+  border: 1px solid var(--foreground-dark);
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+/* generic card */
 .card {
   background-color: var(--background);
   border: 1px solid var(--foreground-dark);
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.2rem;
+  border-radius: 0.375rem;
   transition: box-shadow var(--transition-duration) ease;
 }
-
 .card:hover {
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }

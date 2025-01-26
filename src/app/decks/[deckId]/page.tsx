@@ -62,6 +62,7 @@ export default function DeckDetailPage() {
 
   async function createCard(e: React.FormEvent) {
     e.preventDefault();
+    if (!question.trim() || !answer.trim()) return;
     const { error } = await supabaseBrowser.from('cards').insert([
       {
         deck_id: deckId,
@@ -93,7 +94,7 @@ export default function DeckDetailPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-4 fade-in">
-      <h1 className="text-4xl font-semibold mb-6">deck: {deckTitle}</h1>
+      <h1 className="text-3xl font-bold mb-6 lowercase">deck: {deckTitle}</h1>
       <form onSubmit={createCard} className="flex flex-col gap-2 mb-6">
         <input
           type="text"
@@ -115,22 +116,21 @@ export default function DeckDetailPage() {
       </form>
       <ul className="space-y-4">
         {cards.map((card) => (
-          <li key={card.id} className="border p-4 rounded">
-            <div className="flex justify-between items-center">
+          <li key={card.id} className="border p-4 rounded hover:bg-foreground/5 transition-colors">
+            <div className="flex justify-between items-center mb-2">
               <div>
                 <strong>q:</strong> {card.question_text} <br />
                 <strong>a:</strong> {card.answer_text}
               </div>
               <button
                 onClick={() => deleteCard(card.id)}
-                className="text-red-500 text-sm hover:underline"
+                className="text-red-500 text-sm hover:text-red-300"
               >
                 delete
               </button>
             </div>
-            <div className="text-sm text-gray-500 mt-2">
-              streak: {card.correct_review_streak_count} | ef:{' '}
-              {card?.ease_factor?.toFixed(2)} | next: {card?.next_review_at}
+            <div className="text-sm text-foreground/60">
+              streak: {card.correct_review_streak_count} | ef: {card?.ease_factor?.toFixed(2)} | next: {card?.next_review_at}
             </div>
           </li>
         ))}

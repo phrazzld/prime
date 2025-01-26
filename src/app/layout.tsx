@@ -1,10 +1,14 @@
 import { AuthProvider } from '@/app/auth-provider';
 import NavBar from '@/app/NavBar';
-import { Inter } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/app/ThemeProvider';
 
 const inter = Inter({ subsets: ['latin'] });
+const jetbrains = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--code-font'
+});
 
 export const metadata = {
   title: 'prime mvp',
@@ -17,9 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      {/* data-theme is handled dynamically by ThemeProvider */}
-      <body className={inter.className}>
+    <html lang="en" className={`${inter.className} ${jetbrains.variable}`}>
+      <body>
         <ThemeProvider>
           <AuthProvider>
             <NavBar />

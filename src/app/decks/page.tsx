@@ -40,7 +40,10 @@ export default function DecksPage() {
 
   async function createDeck(e: React.FormEvent) {
     e.preventDefault();
-    const { error } = await supabaseBrowser.from('decks').insert([{ title, user_id: session?.user.id }]);
+    if (!title.trim()) return;
+    const { error } = await supabaseBrowser
+      .from('decks')
+      .insert([{ title, user_id: session?.user.id }]);
     if (error) {
       alert(error.message);
     } else {
@@ -63,7 +66,7 @@ export default function DecksPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-4 fade-in">
-      <h1 className="text-4xl font-semibold mb-6">my decks</h1>
+      <h1 className="text-3xl font-bold mb-6 lowercase">my decks</h1>
       <form onSubmit={createDeck} className="flex gap-2 mb-6">
         <input
           type="text"
@@ -80,7 +83,7 @@ export default function DecksPage() {
         {decks.map((deck) => (
           <li
             key={deck.id}
-            className="p-4 border rounded flex justify-between items-center"
+            className="p-4 border rounded flex justify-between items-center hover:bg-foreground/5 transition-colors"
           >
             <Link
               href={`/decks/${deck.id}`}
@@ -89,7 +92,7 @@ export default function DecksPage() {
               {deck.title}
             </Link>
             <button
-              className="text-red-500 text-sm hover:underline"
+              className="text-red-500 text-sm hover:text-red-300"
               onClick={() => deleteDeck(deck.id)}
             >
               delete
