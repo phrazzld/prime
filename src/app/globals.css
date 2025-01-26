@@ -89,7 +89,7 @@ a {
     color var(--transition-duration) ease,
     transform 0.1s ease;
 }
-[data-theme='light'] a {
+[data-theme='light'] a:not(.btn) {
   color: var(--color-accent);
 }
 [data-theme='light'] a:not(.btn):hover {

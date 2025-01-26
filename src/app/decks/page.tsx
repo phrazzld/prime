@@ -1,105 +1,117 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/app/auth-provider';
-import { supabaseBrowser } from '@/lib/supabaseClient';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { supabaseBrowser } from "@/lib/supabaseClient";
+import { useAuth } from "@/app/auth-provider";
 
-type Deck = {
+interface Deck {
   id: string;
   title: string;
-  created_at: string;
-};
+  description?: string;
+  card_count?: number;
+  due_count?: number;
+}
 
 export default function DecksPage() {
-  const { session, loading } = useAuth();
-  const router = useRouter();
+  const { session } = useAuth();
   const [decks, setDecks] = useState<Deck[]>([]);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // fetch decks
   useEffect(() => {
-    if (!session && !loading) {
-      router.push('/login');
-      return;
-    }
+    if (!session) return;
+    const fetchDecks = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabaseBrowser
+          .from("decks")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .order("created_at", { ascending: true });
+        if (error) throw error;
+        // optional: fetch due counts for each deck, or store it in "decks" table w/ trigger
+        // for now, we’ll assume we have deck.card_count and deck.due_count or we can fetch separately
+        setDecks(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchDecks();
   }, [session]);
 
-  async function fetchDecks() {
-    const { data, error } = await supabaseBrowser
-      .from('decks')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (error) {
-      alert(error.message);
-    } else {
-      setDecks(data as Deck[]);
-    }
-  }
-
-  async function createDeck(e: React.FormEvent) {
-    e.preventDefault();
+  // create deck
+  const handleCreateDeck = async () => {
     if (!title.trim()) return;
-    const { error } = await supabaseBrowser
-      .from('decks')
-      .insert([{ title, user_id: session?.user.id }]);
-    if (error) {
-      alert(error.message);
-    } else {
-      setTitle('');
-      fetchDecks();
+    try {
+      const { data, error } = await supabaseBrowser
+        .from("decks")
+        .insert([{ title, user_id: session?.user.id }])
+        .select();
+      if (error) throw error;
+      if (data) {
+        setDecks((prev) => [...prev, data[0]]);
+        setTitle("");
+      }
+    } catch (err: any) {
+      setError(err.message);
     }
-  }
+  };
 
-  async function deleteDeck(deckId: string) {
-    if (!confirm('delete this deck?')) return;
-    const { error } = await supabaseBrowser.from('decks').delete().eq('id', deckId);
-    if (error) {
-      alert(error.message);
-    } else {
-      fetchDecks();
-    }
-  }
+  console.group("decks")
+  console.log("decks:", decks)
+  console.groupEnd();
 
-  if (loading) return <div>loading...</div>;
+  if (!session) {
+    return (
+      <section className="fade-in-up">
+        <p className="text-sm">please log in to view your decks.</p>
+      </section>
+    );
+  }
 
   return (
-    <div className="max-w-3xl mx-auto p-4 fade-in">
-      <h1 className="text-3xl font-bold mb-6 lowercase">my decks</h1>
-      <form onSubmit={createDeck} className="flex gap-2 mb-6">
+    <section className="fade-in-up">
+      <h1 className="text-3xl font-serif font-semibold mb-4">my decks</h1>
+
+      <div className="flex gap-2 mb-6">
         <input
-          type="text"
+          className="border border-neutral-300 rounded px-2 py-1 text-sm w-full"
           placeholder="deck title"
-          className="border p-2 rounded flex-grow"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <button type="submit" className="btn">
-          create deck
+        <button onClick={handleCreateDeck} className="btn btn-primary text-sm">
+          create
         </button>
-      </form>
-      <ul className="space-y-4">
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {decks.map((deck) => (
-          <li
-            key={deck.id}
-            className="p-4 border rounded flex justify-between items-center hover:bg-foreground/5 transition-colors"
-          >
-            <Link
-              href={`/decks/${deck.id}`}
-              className="text-lg font-medium hover:underline"
-            >
-              {deck.title}
-            </Link>
-            <button
-              className="text-red-500 text-sm hover:text-red-300"
-              onClick={() => deleteDeck(deck.id)}
-            >
-              delete
-            </button>
-          </li>
+          <Link key={deck.id} href={`/decks/${deck.id}`}>
+            <div className="card cursor-pointer hover:shadow-md transition group">
+              <h2 className="text-xl font-serif font-semibold mb-2 group-hover:text-color-accent transition-colors">
+                {deck.title}
+              </h2>
+              <p className="text-sm text-foreground/70 italic">
+                {deck.description || "no description"}
+              </p>
+              <div className="mt-3 flex justify-between text-sm">
+                <span>{deck.card_count ?? 0} cards</span>
+                {deck.due_count && deck.due_count > 0 ? (
+                  <span className="text-color-accent">{deck.due_count} due</span>
+                ) : (
+                  <span className="text-foreground/50">0 due</span>
+                )}
+              </div>
+            </div>
+          </Link>
         ))}
-      </ul>
-    </div>
+      </div>
+    </section>
   );
 }

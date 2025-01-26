@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuth } from "@/app/auth-provider";
-import { IconBrain } from "@/app/components/Icons";
 import { supabaseBrowser } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -18,7 +17,6 @@ export default function HomePage() {
         setIsLoadingCards(false);
         return;
       }
-
       try {
         setIsLoadingCards(true);
         setErrorMessage(null);
@@ -30,11 +28,12 @@ export default function HomePage() {
           .lte("next_review_at", new Date().toISOString());
 
         if (error) throw error;
-
         setCardsDue(count || 0);
       } catch (err) {
         console.error("error fetching cards:", err);
-        setErrorMessage(err instanceof Error ? err.message : "failed to load cards");
+        setErrorMessage(
+          err instanceof Error ? err.message : "failed to load cards"
+        );
         setCardsDue(null);
       } finally {
         setIsLoadingCards(false);
@@ -75,14 +74,19 @@ export default function HomePage() {
     );
   }
 
+  // authenticated homepage
   return (
-    <section className="fade-in-up">
-      <h1 className="text-3xl mb-2 font-serif font-semibold flex items-center gap-2">
-        {/* optional subtle brand icon: smaller, near color-base */}
-        <IconBrain className="w-5 h-5 text-color-base" />
-        {getTimeBasedGreeting()}
-      </h1>
+    <section className="fade-in-up flex flex-col gap-6">
+      {/* hero / greeting */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl mb-1 font-serif font-semibold flex items-center gap-2">
+            {getTimeBasedGreeting()}
+          </h1>
+        </div>
+      </div>
 
+      {/* error display */}
       {errorMessage && (
         <div className="alert bg-red-100 border border-red-300 text-red-700">
           <p>{errorMessage}</p>
@@ -95,45 +99,49 @@ export default function HomePage() {
         </div>
       )}
 
-      {isLoadingCards ? (
-        <p className="text-sm text-foreground/70">
-          loading your review queue...
-        </p>
-      ) : cardsDue === 0 ? (
-        <div className="card">
-          <h2 className="text-xl mb-2 font-serif font-semibold">
-            your queue is empty
-          </h2>
-          <p className="text-sm mb-4">
-            there are no cards due right now. consider creating or exploring decks.
+      {/* main review panel */}
+      <div className="card">
+        {isLoadingCards ? (
+          <p className="text-sm text-foreground/70">
+            loading your review queue...
           </p>
-          <div className="flex gap-3">
-            <Link href="/decks" className="btn btn-primary text-sm">
-              explore decks
-            </Link>
-            <Link href="/snippets" className="btn btn-secondary text-sm">
-              add content
-            </Link>
-          </div>
-        </div>
-      ) : (
-        <div className="card">
-          <h2 className="text-xl mb-2 font-serif font-semibold">
-            you have {cardsDue} cards due
-          </h2>
-          <p className="text-sm mb-4">
-            it’s time to review.
-          </p>
-          <div className="flex gap-3">
-            <Link href="/review" className="btn btn-primary text-sm">
-              start reviewing
-            </Link>
-            <Link href="/decks" className="text-sm underline hover:text-color-base">
-              manage decks →
-            </Link>
-          </div>
-        </div>
-      )}
+        ) : cardsDue === 0 ? (
+          <>
+            <h2 className="text-xl mb-2 font-serif font-semibold">
+              no cards due right now
+            </h2>
+            <p className="text-sm mb-4">
+              you’ve tackled everything! consider adding new decks or refining existing ones.
+            </p>
+            <div className="flex gap-3">
+              <Link href="/decks" className="btn btn-primary text-sm">
+                explore decks
+              </Link>
+              <Link href="/snippets" className="btn btn-secondary text-sm">
+                add content
+              </Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl mb-2 font-serif font-semibold">
+              you have {cardsDue} cards due
+            </h2>
+            <p className="text-sm mb-4">it’s time to review.</p>
+            <div className="flex gap-3">
+              <Link href="/review" className="btn btn-primary text-sm">
+                start reviewing
+              </Link>
+              <Link
+                href="/decks"
+                className="text-sm underline hover:text-color-base"
+              >
+                manage decks →
+              </Link>
+            </div>
+          </>
+        )}
+      </div>
     </section>
   );
 }

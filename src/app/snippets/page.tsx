@@ -53,10 +53,11 @@ export default function SnippetsIndexPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-3xl mb-4">my snippets</h1>
+
+    <div className="fade-in-up">
+      <h1 className="text-3xl font-serif font-semibold mb-4">my snippets</h1>
       <div className="mb-4">
-        <Link href="/snippets/new" className="btn">
+        <Link href="/snippets/new" className="btn btn-primary text-sm">
           create new snippet
         </Link>
       </div>
@@ -70,13 +71,13 @@ export default function SnippetsIndexPage() {
       ) : (
         <ul className="space-y-3">
           {snippets.map((snip) => (
-            <li key={snip.id} className="p-4 border rounded hover:shadow transition-shadow">
+            <li key={snip.id} className="card hover:shadow transition-shadow">
               <Link href={`/snippets/${snip.id}`} className="font-medium underline">
                 {snip.content.length > 60
                   ? snip.content.slice(0, 60) + '...'
                   : snip.content}
               </Link>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-foreground/70 mt-1">
                 created at: {new Date(snip.created_at).toLocaleString()}
               </div>
             </li>

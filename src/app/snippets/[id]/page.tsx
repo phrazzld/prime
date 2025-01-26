@@ -112,12 +112,11 @@ export default function SnippetDetailPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl mb-4">snippet details</h1>
+    <div className="fade-in-up">
+      <h1 className="text-2xl font-serif font-semibold mb-4">snippet details</h1>
 
-      {/* if editing, show form; otherwise show snippet */}
       {isEditing ? (
-        <form onSubmit={saveEdits} className="border p-4 mb-4 rounded flex flex-col gap-2">
+        <form onSubmit={saveEdits} className="card mb-4 flex flex-col gap-2">
           {errorMsg && <p className="text-red-600">{errorMsg}</p>}
           <textarea
             className="border p-2 w-full"
@@ -128,14 +127,14 @@ export default function SnippetDetailPage() {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="btn bg-blue-600 text-white"
+              className="btn bg-blue-600 text-white text-sm"
               disabled={submitting}
             >
               {submitting ? 'saving...' : 'save changes'}
             </button>
             <button
               type="button"
-              className="btn bg-gray-300"
+              className="btn bg-neutral-300 text-sm"
               onClick={cancelEditing}
               disabled={submitting}
             >
@@ -144,9 +143,9 @@ export default function SnippetDetailPage() {
           </div>
         </form>
       ) : (
-        <div className="border p-4 mb-4 rounded">
+        <div className="card mb-4">
           <p>{snippet.content}</p>
-          <div className="text-sm text-gray-500 mt-2">
+          <div className="text-sm text-foreground/70 mt-2">
             created at: {new Date(snippet.created_at).toLocaleString()}
           </div>
         </div>
@@ -156,15 +155,15 @@ export default function SnippetDetailPage() {
         {!isEditing && (
           <button
             onClick={startEditing}
-            className="btn bg-blue-600 text-white"
+            className="btn bg-blue-600 text-white text-sm"
           >
             edit
           </button>
         )}
-        <button onClick={deleteSnippet} className="btn bg-red-600 text-white">
+        <button onClick={deleteSnippet} className="btn bg-red-600 text-white text-sm">
           delete
         </button>
-        <Link href="/snippets" className="btn">
+        <Link href="/snippets" className="btn btn-secondary text-sm">
           back
         </Link>
       </div>

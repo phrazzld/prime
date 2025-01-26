@@ -1,140 +1,158 @@
-'use client';
+"use client";
 
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { supabaseBrowser } from '@/lib/supabaseClient';
-import { useAuth } from '@/app/auth-provider';
+import { supabaseBrowser } from "@/lib/supabaseClient";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-type CardType = {
+interface Card {
   id: string;
   question_text: string;
   answer_text: string;
   correct_review_streak_count: number;
   ease_factor: number;
   next_review_at: string;
-};
+}
 
 export default function DeckDetailPage() {
-  const { session, loading } = useAuth();
-  const router = useRouter();
   const params = useParams();
-  const deckId = params.deckId as string;
+  const [deckTitle, setDeckTitle] = useState("");
+  const [cards, setCards] = useState<Card[]>([]);
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [dueCount, setDueCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [deckTitle, setDeckTitle] = useState('');
-  const [cards, setCards] = useState<CardType[]>([]);
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+  const deckId = params.deckId;
 
+  // fetch deck + cards
   useEffect(() => {
-    if (!session && !loading) {
-      router.push('/login');
-      return;
-    }
-    loadDeck();
-    loadCards();
-  }, [session, deckId]);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const { data: deckData, error: deckError } = await supabaseBrowser
+          .from("decks")
+          .select("*")
+          .eq("id", deckId)
+          .single();
+        if (deckError) throw deckError;
+        setDeckTitle(deckData.title);
 
-  async function loadDeck() {
-    const { data, error } = await supabaseBrowser
-      .from('decks')
-      .select('title')
-      .eq('id', deckId)
-      .single();
-    if (error) {
-      alert(error.message);
-    } else {
-      setDeckTitle(data.title);
-    }
-  }
+        const { data: cardData, error: cardError } = await supabaseBrowser
+          .from("cards")
+          .select("*")
+          .eq("deck_id", deckId)
+          .order("created_at", { ascending: true });
+        if (cardError) throw cardError;
 
-  async function loadCards() {
-    const { data, error } = await supabaseBrowser
-      .from('cards')
-      .select('*')
-      .eq('deck_id', deckId)
-      .order('created_at', { ascending: false });
-    if (error) {
-      alert(error.message);
-    } else {
-      setCards(data as CardType[]);
-    }
-  }
+        setCards(cardData);
 
-  async function createCard(e: React.FormEvent) {
-    e.preventDefault();
-    if (!question.trim() || !answer.trim()) return;
-    const { error } = await supabaseBrowser.from('cards').insert([
-      {
-        deck_id: deckId,
-        question_text: question,
-        answer_text: answer,
-        user_id: session?.user.id
+        // calculate due
+        const now = new Date().toISOString();
+        const due = cardData.filter((c) => c.next_review_at <= now).length;
+        setDueCount(due);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-    ]);
-    if (error) {
-      alert(error.message);
-    } else {
-      setQuestion('');
-      setAnswer('');
-      loadCards();
-    }
-  }
+    };
+    fetchData();
+  }, [deckId]);
 
-  async function deleteCard(cardId: string) {
-    if (!confirm('delete this card?')) return;
-    const { error } = await supabaseBrowser.from('cards').delete().eq('id', cardId);
-    if (error) {
-      alert(error.message);
-    } else {
-      loadCards();
+  // create card
+  const createCard = async () => {
+    if (!question.trim()) return;
+    try {
+      const { data, error } = await supabaseBrowser
+        .from("cards")
+        .insert([
+          {
+            deck_id: deckId,
+            question_text: question,
+            answer_text: answer,
+            next_review_at: new Date().toISOString(),
+          },
+        ])
+        .select();
+      if (error) throw error;
+      if (data) {
+        setCards((prev) => [...prev, data[0]]);
+        setQuestion("");
+        setAnswer("");
+      }
+    } catch (err: any) {
+      setError(err.message);
     }
-  }
-
-  if (loading) return <div>loading...</div>;
+  };
 
   return (
-    <div className="max-w-3xl mx-auto p-4 fade-in">
-      <h1 className="text-3xl font-bold mb-6 lowercase">deck: {deckTitle}</h1>
-      <form onSubmit={createCard} className="flex flex-col gap-2 mb-6">
-        <input
-          type="text"
-          className="border p-2 rounded"
-          placeholder="question"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-        />
-        <input
-          type="text"
-          className="border p-2 rounded"
-          placeholder="answer"
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-        />
-        <button type="submit" className="btn">
-          create card
-        </button>
-      </form>
-      <ul className="space-y-4">
-        {cards.map((card) => (
-          <li key={card.id} className="border p-4 rounded hover:bg-foreground/5 transition-colors">
-            <div className="flex justify-between items-center mb-2">
-              <div>
-                <strong>q:</strong> {card.question_text} <br />
-                <strong>a:</strong> {card.answer_text}
-              </div>
-              <button
-                onClick={() => deleteCard(card.id)}
-                className="text-red-500 text-sm hover:text-red-300"
-              >
-                delete
-              </button>
+    <section className="fade-in-up">
+      {error && (
+        <div className="alert bg-red-100 border border-red-300 text-red-700">
+          {error}
+        </div>
+      )}
+      {loading ? (
+        <p className="text-sm text-foreground/70">loading deck...</p>
+      ) : (
+        <>
+          <div className="mb-4 flex items-center justify-between">
+            <h1 className="text-3xl font-serif font-semibold">{deckTitle}</h1>
+            {dueCount > 0 ? (
+              <Link href="/review" className="btn btn-primary text-sm">
+                review {dueCount} due
+              </Link>
+            ) : (
+              <span className="text-sm text-foreground/70">no cards due</span>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <div className="flex gap-2 mb-2">
+              <input
+                className="border border-neutral-300 rounded px-2 py-1 text-sm w-1/2"
+                placeholder="question"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+              />
+              <input
+                className="border border-neutral-300 rounded px-2 py-1 text-sm w-1/2"
+                placeholder="answer"
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+              />
             </div>
-            <div className="text-sm text-foreground/60">
-              streak: {card.correct_review_streak_count} | ef: {card?.ease_factor?.toFixed(2)} | next: {card?.next_review_at}
+            <button onClick={createCard} className="btn btn-primary text-sm">
+              create card
+            </button>
+          </div>
+
+          {cards.length === 0 ? (
+            <p className="text-sm text-foreground/70">no cards yet. create one above!</p>
+          ) : (
+            <div className="space-y-2">
+              {cards.map((card) => (
+                <div key={card.id} className="card">
+                  <div className="mb-1 flex items-baseline justify-between">
+                    <h2 className="font-serif text-lg font-semibold">
+                      q: {card.question_text}
+                    </h2>
+                    <button className="text-sm text-red-600 hover:text-red-700">
+                      delete
+                    </button>
+                  </div>
+                  <p className="mb-2">a: {card.answer_text}</p>
+                  <p className="text-xs text-foreground/70">
+                    streak: {card.correct_review_streak_count} | ef: {card.ease_factor.toFixed(2)} | next: {card.next_review_at}
+                  </p>
+                </div>
+              ))}
             </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+          )}
+        </>
+      )}
+    </section>
   );
 }
