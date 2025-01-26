@@ -1,129 +1,240 @@
-/* import tailwind layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* color variables */
+/* root design tokens */
 :root {
-  --brand: #1c75bc; /* deep blue */
-  --brand-accent: #d4af37; /* gold */
-
   --background-light: #ffffff;
-  --foreground-light: #121212;
+  --foreground-light: #161616;
 
   --background-dark: #0e0e0e;
   --foreground-dark: #eaeaea;
 
-  --transition-duration: 0.3s;
+  --color-base-light: #14213d; /* near-black navy */
+  --color-accent-light: #bfa15a; /* toned-down gold */
+
+  /* if you want a different shade in dark mode, you can tweak here */
+  --color-base-dark: #14213d;
+  --color-accent-dark: #bfa15a;
+
+  --transition-duration: 0.25s;
   --code-font: 'JetBrains Mono', monospace;
 }
 
-/* theme handling */
+/* theming */
 [data-theme='light'] {
   --background: var(--background-light);
   --foreground: var(--foreground-light);
+  --color-base: var(--color-base-light);
+  --color-accent: var(--color-accent-light);
 }
 
 [data-theme='dark'] {
   --background: var(--background-dark);
   --foreground: var(--foreground-dark);
+  --color-base: var(--color-base-dark);
+  --color-accent: var(--color-accent-dark);
 }
 
-/* body defaults */
+/* universal styling */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  transition: background var(--transition-duration) ease, color var(--transition-duration) ease;
   margin: 0;
   padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
-  font-variant-ligatures: common-ligatures;
+  transition:
+    background var(--transition-duration) ease,
+    color var(--transition-duration) ease;
 }
 
-/* code blocks, if any appear */
+/* headings: use playfair and swap colors in dark mode */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 1rem;
+  line-height: 1.3;
+  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+}
+
+/* light mode headings = navy; dark mode headings = foreground */
+[data-theme='light'] h1,
+[data-theme='light'] h2,
+[data-theme='light'] h3,
+[data-theme='light'] h4,
+[data-theme='light'] h5,
+[data-theme='light'] h6 {
+  color: var(--color-base);
+}
+[data-theme='dark'] h1,
+[data-theme='dark'] h2,
+[data-theme='dark'] h3,
+[data-theme='dark'] h4,
+[data-theme='dark'] h5,
+[data-theme='dark'] h6 {
+  color: var(--foreground);
+}
+
+/* code & pre blocks */
 code, pre {
   font-family: var(--code-font);
+  background-color: rgba(0, 0, 0, 0.04);
+  color: var(--foreground);
 }
 
-/* headings in a minimal style */
-h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 0.75rem;
-  font-weight: 700;
-  color: var(--brand);
-}
-
-/* links and buttons */
-a, button {
+/* links: gold in both modes; on hover, go navy in light mode, near-white in dark mode */
+a {
   text-decoration: none;
-  transition: color var(--transition-duration) ease, background var(--transition-duration) ease, border-color var(--transition-duration) ease, transform 0.1s ease;
-  cursor: pointer;
+  transition:
+    color var(--transition-duration) ease,
+    transform 0.1s ease;
+}
+[data-theme='light'] a {
+  color: var(--color-accent);
+}
+[data-theme='light'] a:not(.btn):hover {
+  color: var(--color-base); /* only applies to non-button links */
+}
+[data-theme='dark'] a {
+  color: var(--color-accent);
+}
+[data-theme='dark'] a:hover {
+  color: var(--foreground); /* near-white for contrast */
 }
 
-/* subtle button style */
+/* nav bar */
+nav {
+  background: var(--background);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+  transition: background var(--transition-duration) ease;
+}
+nav a {
+  padding: 0.5rem 0;
+}
+
+/* buttons */
 .btn {
-  padding: 0.6rem 1.2rem;
-  font-weight: 500;
-  text-transform: lowercase;
-  letter-spacing: 0.05em;
-  background-color: var(--brand);
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 0.25rem;
-  box-shadow: none;
-  border: none;
+  padding: 0.65rem 1.4rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-duration) ease,
+    color var(--transition-duration) ease,
+    transform 0.1s ease;
 }
 
-/* ephemeral swirl on click + hover highlight */
-.btn:hover {
-  background-color: var(--brand-accent);
-  color: var(--foreground-dark);
+/* .btn-primary: always dark navy background, white text */
+.btn-primary {
+  background-color: var(--color-base);
+  color: #fff; /* ensures visibility in both light + dark */
 }
-.btn:active {
-  animation: swirl 0.1s ease-in-out;
+.btn-primary:hover {
+  background-color: #1c2e57; /* slightly lighter navy, text still #fff */
+  color: #fff;
+  transform: scale(1.02);
 }
-@keyframes swirl {
+
+/* .btn-secondary: outline style.
+   in light mode, outline + text = navy, hover fill = navy.
+   in dark mode, outline + text = gold, hover fill = gold + text = black. */
+.btn-secondary {
+  background-color: transparent;
+  transition: transform 0.1s ease;
+}
+
+[data-theme='light'] .btn-secondary {
+  border: 1px solid var(--color-base);
+  color: var(--color-base);
+}
+[data-theme='light'] .btn-secondary:hover {
+  background-color: var(--color-base);
+  color: #fff;
+  transform: scale(1.02);
+}
+
+[data-theme='dark'] .btn-secondary {
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+}
+[data-theme='dark'] .btn-secondary:hover {
+  background-color: var(--color-accent);
+  color: #000;
+  transform: scale(1.02);
+}
+
+/* fade-in-up utility */
+@keyframes fadeInUp {
   0% {
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    transform: scale(1.04) rotate(3deg);
+    opacity: 0;
+    transform: translateY(4px);
   }
   100% {
-    transform: scale(1) rotate(0deg);
-  }
-}
-
-/* subtle fade animation for elements */
-.fade-in {
-  opacity: 0;
-  transform: translateY(4px);
-  animation: fadeInUp 0.6s forwards;
-}
-@keyframes fadeInUp {
-  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-
-/* form inputs */
-input, textarea {
-  color: var(--foreground);
-  background-color: var(--background);
-  border: 1px solid var(--foreground-dark);
-  border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  outline: none;
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(4px);
+  animation: fadeInUp 0.4s ease forwards;
 }
 
-/* generic card */
+/* cards */
 .card {
-  background-color: var(--background);
-  border: 1px solid var(--foreground-dark);
-  padding: 1.2rem;
-  border-radius: 0.375rem;
-  transition: box-shadow var(--transition-duration) ease;
+  background: linear-gradient(to bottom right, #fafafa, #fdfdfd);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition:
+    box-shadow var(--transition-duration) ease,
+    transform var(--transition-duration) ease;
 }
 .card:hover {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
+}
+
+/* dark-mode card:
+   near-black but keep text bright for contrast */
+[data-theme='dark'] .card {
+  background: #141414;
+  border-color: rgba(255,255,255,0.1);
+  color: var(--foreground);
+}
+
+/* alerts */
+.alert {
+  border-radius: 0.25rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--background);
+  border-radius: 0.25rem;
+  padding: 2rem;
+  min-width: 300px;
+  transform: scale(0.95);
+  animation: scaleIn 0.2s forwards ease;
+}
+
+@keyframes scaleIn {
+  to {
+    transform: scale(1);
+  }
 }

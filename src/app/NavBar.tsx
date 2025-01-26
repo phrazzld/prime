@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useAuth } from '@/app/auth-provider';
-import { supabaseBrowser } from '@/lib/supabaseClient';
-import { useTheme } from '@/app/ThemeProvider';
+import Link from "next/link";
+import { useAuth } from "@/app/auth-provider";
+import { supabaseBrowser } from "@/lib/supabaseClient";
+import { useTheme } from "@/app/ThemeProvider";
 
 export default function NavBar() {
   const { session } = useAuth();
@@ -14,38 +14,36 @@ export default function NavBar() {
   }
 
   return (
-    <nav className="flex justify-between items-center py-4 px-8 mb-4 border-b border-foreground/20 transition-colors duration-300">
-      <div className="flex gap-6 lowercase">
-        <Link href="/" className="hover:text-brand-accent transition-colors">
+    <nav className="w-full flex items-center justify-between px-8 py-3 mb-6">
+      <div className="flex items-center gap-6">
+        <Link href="/" className="text-sm tracking-normal">
           home
         </Link>
-        <Link href="/decks" className="hover:text-brand-accent transition-colors">
+        <Link href="/decks" className="text-sm tracking-normal">
           decks
         </Link>
-        <Link href="/review" className="hover:text-brand-accent transition-colors">
+        <Link href="/review" className="text-sm tracking-normal">
           review
         </Link>
-        <Link href="/snippets" className="hover:text-brand-accent transition-colors">
+        <Link href="/snippets" className="text-sm tracking-normal">
           snippets
         </Link>
-        {session ? (
+        {session && (
           <button
             onClick={handleSignOut}
-            className="hover:text-red-400 transition-colors"
+            className="text-sm tracking-normal hover:text-red-600"
           >
             sign out
           </button>
-        ) : (
-          <Link href="/login" className="hover:text-brand-accent transition-colors">
+        )}
+        {!session && (
+          <Link href="/login" className="text-sm tracking-normal">
             login
           </Link>
         )}
       </div>
-      <button
-        onClick={toggleTheme}
-        className="btn bg-transparent text-foreground border border-foreground hover:bg-foreground hover:text-background transition-colors"
-      >
-        {theme === 'light' ? 'dark mode' : 'light mode'}
+      <button onClick={toggleTheme} className="btn btn-secondary text-xs">
+        {theme === "light" ? "dark mode" : "light mode"}
       </button>
     </nav>
   );
