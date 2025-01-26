@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabaseBrowser } from "@/lib/supabaseClient";
 import { useAuth } from "@/app/auth-provider";
+import { Input } from '@/components/ui/input';
 
 interface Deck {
   id: string;
@@ -78,14 +79,9 @@ export default function DecksPage() {
     <section className="fade-in-up">
       <h1 className="text-3xl font-serif font-semibold mb-4">my decks</h1>
 
-      <div className="flex gap-2 mb-6">
-        <input
-          className="border border-neutral-300 rounded px-2 py-1 text-sm w-full"
-          placeholder="deck title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <button onClick={handleCreateDeck} className="btn btn-primary text-sm">
+      <div className="flex gap-2 mb-6 items-center">
+        <Input type="text" placeholder="deck title" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <button onClick={handleCreateDeck} className="btn btn-primary">
           create
         </button>
       </div>

@@ -5,6 +5,7 @@ import { supabaseBrowser } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Input } from '@/components/ui/input';
 
 export default function DeckDetailPage() {
   const params = useParams();
@@ -108,18 +109,8 @@ export default function DeckDetailPage() {
 
           <div className="mb-4">
             <div className="flex flex-col gap-2 mb-2 w-full">
-              <input
-                className="border border-neutral-300 rounded px-2 py-1 text-sm"
-                placeholder="question"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-              />
-              <input
-                className="border border-neutral-300 rounded px-2 py-1 text-sm"
-                placeholder="answer"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              />
+              <Input type="text" placeholder="question" value={question} onChange={(e) => setQuestion(e.target.value)} />
+              <Input type="text" placeholder="answer" value={answer} onChange={(e) => setAnswer(e.target.value)} />
             </div>
             <button onClick={createCard} className="btn btn-primary text-sm">
               create card

@@ -2,6 +2,7 @@
 
 import { supabaseBrowser } from '@/lib/supabaseClient';
 import { useState } from 'react';
+import { Input } from '@/components/ui/input';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -29,13 +30,7 @@ export default function LoginPage() {
     <div className="fade-in max-w-md mx-auto p-4">
       <h1 className="text-3xl mb-4 font-bold">log in</h1>
       <form onSubmit={handleLogin} className="flex flex-col gap-2">
-        <input
-          type="email"
-          placeholder="email"
-          className="border p-2 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <Input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <button type="submit" className="btn btn-secondary px-4 py-2">
           send magic link
         </button>
