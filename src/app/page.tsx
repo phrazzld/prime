@@ -60,12 +60,12 @@ export default function HomePage() {
 
   if (!session) {
     return (
-      <section className="fade-in-up text-center max-w-xl mx-auto">
+      <section className="fade-in-up max-w-xl mx-auto">
         <h1 className="text-4xl mb-4 font-serif font-semibold">
           welcome to prime
         </h1>
         <p className="mb-6 text-base text-foreground/70">
-          an intelligent srs platform that helps you master anything, elegantly.
+          an intelligent spaced repetition platform for mastering anything.
         </p>
         <Link href="/login" className="btn btn-primary text-sm">
           get started

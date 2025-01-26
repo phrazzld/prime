@@ -206,6 +206,10 @@ nav a {
   color: var(--foreground);
 }
 
+[data-theme='dark'] input {
+  color: var(--background);
+}
+
 /* alerts */
 .alert {
   border-radius: 0.25rem;

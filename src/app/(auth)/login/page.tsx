@@ -1,11 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { supabaseBrowser } from '@/lib/supabaseClient';
+import { useState } from 'react';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [feedback, setFeedback] = useState('');
 
@@ -38,11 +36,11 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <button type="submit" className="btn px-4 py-2">
+        <button type="submit" className="btn btn-secondary px-4 py-2">
           send magic link
         </button>
       </form>
-      {feedback && <p className="mt-2 text-red-600">{feedback}</p>}
+      {feedback && <p className="mt-2">{feedback}</p>}
     </div>
   );
 }
