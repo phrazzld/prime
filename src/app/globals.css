@@ -138,6 +138,25 @@ nav a {
   transform: scale(1.02);
 }
 
+[data-theme='light'] .btn-primary {
+  background-color: var(--color-base);
+  color: #fff; /* ensures visibility in both light + dark */
+}
+[data-theme='light'] .btn-primary:hover {
+  background-color: #1c2e57; /* slightly lighter navy, text still #fff */
+  color: #fff;
+  transform: scale(1.02);
+}
+[data-theme='dark'] .btn-primary {
+  background-color: var(--color-accent);
+  color: #000; /* ensures visibility in both light + dark */
+}
+[data-theme='dark'] .btn-primary:hover {
+  background-color: #bfa15a; /* slightly lighter gold, text still #000 */
+  color: #000;
+  transform: scale(1.02);
+}
+
 /* .btn-secondary: outline style.
    in light mode, outline + text = navy, hover fill = navy.
    in dark mode, outline + text = gold, hover fill = gold + text = black. */

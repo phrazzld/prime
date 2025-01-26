@@ -1,23 +1,15 @@
 "use client";
 
+import { TCard } from "@/lib/schema";
 import { supabaseBrowser } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface Card {
-  id: string;
-  question_text: string;
-  answer_text: string;
-  correct_review_streak_count: number;
-  ease_factor: number;
-  next_review_at: string;
-}
-
 export default function DeckDetailPage() {
   const params = useParams();
   const [deckTitle, setDeckTitle] = useState("");
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<TCard[]>([]);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [dueCount, setDueCount] = useState(0);
@@ -99,7 +91,12 @@ export default function DeckDetailPage() {
       ) : (
         <>
           <div className="mb-4 flex items-center justify-between">
-            <h1 className="text-3xl font-serif font-semibold">{deckTitle}</h1>
+            <div className="flex flex-col">
+              <p className="text-foreground/70 text-gray-500 mb-0">
+                deck
+              </p>
+              <h1 className="text-3xl font-serif font-semibold">{deckTitle}</h1>
+            </div>
             {dueCount > 0 ? (
               <Link href="/review" className="btn btn-primary text-sm">
                 review {dueCount} due
@@ -110,15 +107,15 @@ export default function DeckDetailPage() {
           </div>
 
           <div className="mb-4">
-            <div className="flex gap-2 mb-2">
+            <div className="flex flex-col gap-2 mb-2 w-full">
               <input
-                className="border border-neutral-300 rounded px-2 py-1 text-sm w-1/2"
+                className="border border-neutral-300 rounded px-2 py-1 text-sm"
                 placeholder="question"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
               />
               <input
-                className="border border-neutral-300 rounded px-2 py-1 text-sm w-1/2"
+                className="border border-neutral-300 rounded px-2 py-1 text-sm"
                 placeholder="answer"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
@@ -145,7 +142,7 @@ export default function DeckDetailPage() {
                   </div>
                   <p className="mb-2">a: {card.answer_text}</p>
                   <p className="text-xs text-foreground/70">
-                    streak: {card.correct_review_streak_count} | ef: {card.ease_factor.toFixed(2)} | next: {card.next_review_at}
+                    streak: {card.correct_review_streak_count} | ef: {card.ease_factor.toFixed(2)} | next: {card.next_review_at.toLocaleString()}
                   </p>
                 </div>
               ))}
