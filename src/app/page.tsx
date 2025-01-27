@@ -5,6 +5,15 @@ import { Button } from '@/components/ui/button';
 import { supabaseBrowser } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
 
 export default function HomePage() {
   const { session, loading: authLoading } = useAuth();
@@ -89,21 +98,70 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* error display */}
-      {errorMessage && (
-        <div className="alert bg-red-100 border border-red-300 text-red-700">
-          <p>{errorMessage}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
-          >
-            retry
-          </Button>
-        </div>
-      )}
-
       {/* main review panel */}
-      <div className="card">
+      <Card>
+        <CardHeader>
+          <CardTitle></CardTitle>
+          <CardDescription></CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoadingCards ? (
+            <p className="text-sm text-foreground/70">
+              loading your review queue...
+            </p>
+          ) : cardsDue === 0 ? (
+            <>
+              <h2 className="text-xl mb-2 font-serif font-semibold">
+                no cards due right now
+              </h2>
+              <p className="text-sm mb-4">
+                you’ve tackled everything! consider adding new decks or refining existing ones.
+              </p>
+              <div className="flex gap-3">
+                <Button asChild>
+                  <Link href="/decks" className="btn btn-primary text-sm">
+                    explore decks
+                  </Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/snippets" className="btn btn-secondary text-sm">
+                    add content
+                  </Link>
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="text-xl mb-2 font-serif font-semibold">
+                you have {cardsDue} cards due
+              </h2>
+              <p className="text-sm mb-4">it’s time to review.</p>
+              <div className="flex gap-3">
+                <Button asChild>
+                  <Link href="/review" className="btn btn-primary">
+                    start reviewing
+                  </Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link
+                    href="/decks"
+                    className="btn btn-secondary"
+                  >
+                    manage decks
+                  </Link>
+                </Button>
+              </div>
+            </>
+          )}
+        </CardContent>
+        <CardFooter>
+          <p className="text-sm text-foreground/70">
+            {errorMessage}
+          </p>
+        </CardFooter>
+      </Card>
+
+      {/*<div className="card">
         {isLoadingCards ? (
           <p className="text-sm text-foreground/70">
             loading your review queue...
@@ -153,6 +211,7 @@ export default function HomePage() {
           </>
         )}
       </div>
+      */}
     </section>
   );
 }
