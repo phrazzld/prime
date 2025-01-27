@@ -9,6 +9,13 @@ import { Loader2 } from 'lucide-react';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 
 export default function DeckDetailPage() {
   const { session } = useAuth();
@@ -121,7 +128,7 @@ export default function DeckDetailPage() {
         <>
           <div className="mb-4 flex items-center justify-between">
             <div className="flex flex-col">
-              <p className="text-foreground/70 text-gray-500 mb-0">
+              <p className="text-foreground/70 text-gray-500 mb-0 uppercase text-sm">
                 deck
               </p>
               <h1 className="text-3xl font-serif font-semibold">{deckTitle}</h1>
@@ -137,49 +144,66 @@ export default function DeckDetailPage() {
             )}
           </div>
 
-          <div className="mb-4">
-            <div className="flex flex-col gap-2 mb-2 w-full">
-              <Input type="text" placeholder="question" value={question} onChange={(e) => setQuestion(e.target.value)} />
-              <Input type="text" placeholder="answer" value={answer} onChange={(e) => setAnswer(e.target.value)} />
-            </div>
-            <Button onClick={createCard} disabled={isCreatingCard}>
-              {isCreatingCard ? (
-                <div className="flex flex-row items-center gap-2">
-                  <Loader2 className="animate-spin" />
-                  <p className="text-sm">creating...</p>
-                </div>
-              ) : (
-                'create card'
-              )}
-            </Button>
-          </div>
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>new card</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-2 mb-2 w-full">
+                <Input type="text" placeholder="question" value={question} onChange={(e) => setQuestion(e.target.value)} />
+                <Input type="text" placeholder="answer" value={answer} onChange={(e) => setAnswer(e.target.value)} />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={createCard} disabled={isCreatingCard}>
+                {isCreatingCard ? (
+                  <div className="flex flex-row items-center gap-2">
+                    <Loader2 className="animate-spin" />
+                    <p className="text-sm">creating...</p>
+                  </div>
+                ) : (
+                  'create card'
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
 
           {cards.length === 0 ? (
             <p className="text-sm text-foreground/70">no cards yet. create one above!</p>
           ) : (
             <div className="space-y-2">
               {cards.map((card) => (
-                <div key={card.id} className="card">
-                  <div className="mb-1 flex items-baseline justify-between">
-                    <h2 className="font-serif text-lg font-semibold">
-                      q: {card.question_text}
-                    </h2>
-                    <Button onClick={() => deleteCard(card.id)} disabled={!!isDeletingCard} variant="destructive">
-                      {isDeletingCard === card.id ? (
-                        <div className="flex flex-row items-center gap-2">
-                          <Loader2 className="animate-spin" />
-                          <p className="text-sm">deleting...</p>
-                        </div>
-                      ) : (
-                        'delete'
-                      )}
-                    </Button>
-                  </div>
-                  <p className="mb-2">a: {card.answer_text}</p>
-                  <p className="text-xs text-foreground/70">
-                    streak: {card.correct_review_streak_count} | ef: {card.ease_factor.toFixed(2)} | next: {card.next_review_at.toLocaleString()}
-                  </p>
-                </div>
+                <Card key={card.id} className="mb-6">
+                  <CardHeader>
+                    <p className="text-sm uppercase text-foreground/70 tracking-wider">
+                      question
+                    </p>
+                    <CardTitle>{card.question_text}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm uppercase text-foreground/70 tracking-wider">
+                      answer
+                    </p>
+                    <p className="font-semibold text-base">{card.answer_text}</p>
+                  </CardContent>
+                  <CardFooter>
+                    <div className="flex flex-row items-center justify-between w-full">
+                      <p className="text-xs text-foreground/70">
+                        streak: {card.correct_review_streak_count} | ef: {card.ease_factor.toFixed(2)} | next: {card.next_review_at.toLocaleString()}
+                      </p>
+                      <Button onClick={() => deleteCard(card.id)} disabled={!!isDeletingCard} variant="destructive">
+                        {isDeletingCard === card.id ? (
+                          <div className="flex flex-row items-center gap-2">
+                            <Loader2 className="animate-spin" />
+                            <p className="text-sm">deleting...</p>
+                          </div>
+                        ) : (
+                          'delete'
+                        )}
+                      </Button>
+                    </div>
+                  </CardFooter>
+                </Card>
               ))}
             </div>
           )}
