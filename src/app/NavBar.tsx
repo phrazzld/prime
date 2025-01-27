@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useAuth } from "@/app/auth-provider";
-import { supabaseBrowser } from "@/lib/supabaseClient";
 import { useTheme } from "@/app/ThemeProvider";
+import { Button } from '@/components/ui/button';
+import { supabaseBrowser } from "@/lib/supabaseClient";
+import Link from "next/link";
 
 export default function NavBar() {
   const { session } = useAuth();
@@ -16,35 +17,42 @@ export default function NavBar() {
   return (
     <nav className="w-full flex items-center justify-between px-8 py-3 mb-6">
       <div className="flex items-center gap-6">
-        <Link href="/" className="text-sm tracking-normal">
-          home
-        </Link>
-        <Link href="/decks" className="text-sm tracking-normal">
-          decks
-        </Link>
-        <Link href="/review" className="text-sm tracking-normal">
-          review
-        </Link>
-        <Link href="/snippets" className="text-sm tracking-normal">
-          snippets
-        </Link>
+        <Button asChild variant="link">
+          <Link href="/" className="text-sm tracking-normal">
+            home
+          </Link>
+        </Button>
+        <Button asChild variant="link">
+          <Link href="/decks" className="text-sm tracking-normal">
+            decks
+          </Link>
+        </Button>
+        <Button asChild variant="link">
+          <Link href="/review" className="text-sm tracking-normal">
+            review
+          </Link>
+        </Button>
+        <Button asChild variant="link">
+          <Link href="/snippets" className="text-sm tracking-normal">
+            snippets
+          </Link>
+        </Button>
         {session && (
-          <button
-            onClick={handleSignOut}
-            className="text-sm tracking-normal hover:text-red-600"
-          >
+          <Button variant="ghost" onClick={handleSignOut}>
             sign out
-          </button>
+          </Button>
         )}
         {!session && (
-          <Link href="/login" className="text-sm tracking-normal">
-            login
-          </Link>
+          <Button asChild variant="link">
+            <Link href="/login" className="text-sm tracking-normal">
+              login
+            </Link>
+          </Button>
         )}
       </div>
-      <button onClick={toggleTheme} className="btn btn-secondary text-xs">
+      <Button variant="secondary" onClick={toggleTheme}>
         {theme === "light" ? "dark mode" : "light mode"}
-      </button>
+      </Button>
     </nav>
   );
 }

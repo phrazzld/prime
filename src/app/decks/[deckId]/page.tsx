@@ -1,13 +1,17 @@
 "use client";
 
+import { useAuth } from "@/app/auth-provider";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { TCard } from "@/lib/schema";
 import { supabaseBrowser } from "@/lib/supabaseClient";
+import { Loader2 } from 'lucide-react';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Input } from '@/components/ui/input';
 
 export default function DeckDetailPage() {
+  const { session } = useAuth();
   const params = useParams();
   const [deckTitle, setDeckTitle] = useState("");
   const [cards, setCards] = useState<TCard[]>([]);
@@ -16,6 +20,8 @@ export default function DeckDetailPage() {
   const [dueCount, setDueCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isCreatingCard, setIsCreatingCard] = useState(false);
+  const [isDeletingCard, setIsDeletingCard] = useState<string | null>(null);
 
   const deckId = params.deckId;
 
@@ -57,6 +63,8 @@ export default function DeckDetailPage() {
   // create card
   const createCard = async () => {
     if (!question.trim()) return;
+
+    setIsCreatingCard(true);
     try {
       const { data, error } = await supabaseBrowser
         .from("cards")
@@ -66,6 +74,7 @@ export default function DeckDetailPage() {
             question_text: question,
             answer_text: answer,
             next_review_at: new Date().toISOString(),
+            user_id: session?.user.id,
           },
         ])
         .select();
@@ -77,6 +86,25 @@ export default function DeckDetailPage() {
       }
     } catch (err: any) {
       setError(err.message);
+    } finally {
+      setIsCreatingCard(false);
+    }
+  };
+
+  const deleteCard = async (cardId: string) => {
+    if (!confirm('delete this card?')) return;
+    setIsDeletingCard(cardId);
+    try {
+      const { error } = await supabaseBrowser
+        .from("cards")
+        .delete()
+        .eq("id", cardId);
+      if (error) throw error;
+      setCards((prev) => prev.filter((c) => c.id !== cardId));
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsDeletingCard(null);
     }
   };
 
@@ -99,9 +127,11 @@ export default function DeckDetailPage() {
               <h1 className="text-3xl font-serif font-semibold">{deckTitle}</h1>
             </div>
             {dueCount > 0 ? (
-              <Link href="/review" className="btn btn-primary text-sm">
-                review {dueCount} due
-              </Link>
+              <Button asChild>
+                <Link href="/review" className="btn btn-primary text-sm">
+                  review {dueCount} due
+                </Link>
+              </Button>
             ) : (
               <span className="text-sm text-foreground/70">no cards due</span>
             )}
@@ -112,9 +142,16 @@ export default function DeckDetailPage() {
               <Input type="text" placeholder="question" value={question} onChange={(e) => setQuestion(e.target.value)} />
               <Input type="text" placeholder="answer" value={answer} onChange={(e) => setAnswer(e.target.value)} />
             </div>
-            <button onClick={createCard} className="btn btn-primary text-sm">
-              create card
-            </button>
+            <Button onClick={createCard} disabled={isCreatingCard}>
+              {isCreatingCard ? (
+                <div className="flex flex-row items-center gap-2">
+                  <Loader2 className="animate-spin" />
+                  <p className="text-sm">creating...</p>
+                </div>
+              ) : (
+                'create card'
+              )}
+            </Button>
           </div>
 
           {cards.length === 0 ? (
@@ -127,9 +164,16 @@ export default function DeckDetailPage() {
                     <h2 className="font-serif text-lg font-semibold">
                       q: {card.question_text}
                     </h2>
-                    <button className="text-sm text-red-600 hover:text-red-700">
-                      delete
-                    </button>
+                    <Button onClick={() => deleteCard(card.id)} disabled={!!isDeletingCard} variant="destructive">
+                      {isDeletingCard === card.id ? (
+                        <div className="flex flex-row items-center gap-2">
+                          <Loader2 className="animate-spin" />
+                          <p className="text-sm">deleting...</p>
+                        </div>
+                      ) : (
+                        'delete'
+                      )}
+                    </Button>
                   </div>
                   <p className="mb-2">a: {card.answer_text}</p>
                   <p className="text-xs text-foreground/70">

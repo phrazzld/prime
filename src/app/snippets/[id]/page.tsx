@@ -1,7 +1,9 @@
 'use client';
 
 import { useAuth } from '@/app/auth-provider';
+import { Button } from '@/components/ui/button';
 import { supabaseBrowser } from '@/lib/supabaseClient';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -125,21 +127,19 @@ export default function SnippetDetailPage() {
             onChange={(e) => setDraftContent(e.target.value)}
           />
           <div className="flex gap-2">
-            <button
-              type="submit"
-              className="btn bg-blue-600 text-white text-sm"
-              disabled={submitting}
-            >
-              {submitting ? 'saving...' : 'save changes'}
-            </button>
-            <button
-              type="button"
-              className="btn bg-neutral-300 text-sm"
-              onClick={cancelEditing}
-              disabled={submitting}
-            >
+            <Button type="submit" disabled={submitting}>
+              {submitting ? (
+                <div className="flex flex-row items-center gap-2">
+                  <Loader2 className="animate-spin" />
+                  <p className="text-sm">saving...</p>
+                </div>
+              ) : (
+                'save changes'
+              )}
+            </Button>
+            <Button type="button" onClick={cancelEditing} disabled={submitting} variant="outline">
               cancel
-            </button>
+            </Button>
           </div>
         </form>
       ) : (
@@ -153,19 +153,18 @@ export default function SnippetDetailPage() {
 
       <div className="flex gap-4">
         {!isEditing && (
-          <button
-            onClick={startEditing}
-            className="btn bg-blue-600 text-white text-sm"
-          >
+          <Button onClick={startEditing}>
             edit
-          </button>
+          </Button>
         )}
-        <button onClick={deleteSnippet} className="btn bg-red-600 text-white text-sm">
+        <Button onClick={deleteSnippet} variant="destructive">
           delete
-        </button>
-        <Link href="/snippets" className="btn btn-secondary text-sm">
-          back
-        </Link>
+        </Button>
+        <Button asChild variant="link">
+          <Link href="/snippets">
+            back
+          </Link>
+        </Button>
       </div>
     </div>
   );

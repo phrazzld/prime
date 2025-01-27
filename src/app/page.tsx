@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/app/auth-provider";
+import { Button } from '@/components/ui/button';
 import { supabaseBrowser } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -67,9 +68,11 @@ export default function HomePage() {
         <p className="mb-6 text-base text-foreground/70">
           an intelligent spaced repetition platform for mastering anything.
         </p>
-        <Link href="/login" className="btn btn-primary text-sm">
-          get started
-        </Link>
+        <Button asChild>
+          <Link href="/login">
+            get started
+          </Link>
+        </Button>
       </section>
     );
   }
@@ -90,12 +93,12 @@ export default function HomePage() {
       {errorMessage && (
         <div className="alert bg-red-100 border border-red-300 text-red-700">
           <p>{errorMessage}</p>
-          <button
+          <Button
             onClick={() => window.location.reload()}
-            className="mt-2 text-sm underline hover:text-red-600"
+            variant="outline"
           >
             retry
-          </button>
+          </Button>
         </div>
       )}
 
@@ -114,12 +117,16 @@ export default function HomePage() {
               you’ve tackled everything! consider adding new decks or refining existing ones.
             </p>
             <div className="flex gap-3">
-              <Link href="/decks" className="btn btn-primary text-sm">
-                explore decks
-              </Link>
-              <Link href="/snippets" className="btn btn-secondary text-sm">
-                add content
-              </Link>
+              <Button asChild>
+                <Link href="/decks" className="btn btn-primary text-sm">
+                  explore decks
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link href="/snippets" className="btn btn-secondary text-sm">
+                  add content
+                </Link>
+              </Button>
             </div>
           </>
         ) : (
@@ -129,15 +136,19 @@ export default function HomePage() {
             </h2>
             <p className="text-sm mb-4">it’s time to review.</p>
             <div className="flex gap-3">
-              <Link href="/review" className="btn btn-primary text-sm">
-                start reviewing
-              </Link>
-              <Link
-                href="/decks"
-                className="text-sm underline hover:text-color-base"
-              >
-                manage decks →
-              </Link>
+              <Button asChild>
+                <Link href="/review" className="btn btn-primary text-sm">
+                  start reviewing
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link
+                  href="/decks"
+                  className="text-sm underline hover:text-color-base"
+                >
+                  manage decks →
+                </Link>
+              </Button>
             </div>
           </>
         )}

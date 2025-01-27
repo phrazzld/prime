@@ -4,6 +4,8 @@ import { useAuth } from '@/app/auth-provider';
 import { supabaseBrowser } from '@/lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 
 export default function NewSnippetPage() {
   const { session, loading } = useAuth();
@@ -60,9 +62,16 @@ export default function NewSnippetPage() {
           onChange={(e) => setContent(e.target.value)}
           placeholder="enter your ephemeral snippet here..."
         />
-        <button type="submit" className="btn bg-blue-600 text-white" disabled={submitting}>
-          {submitting ? 'creating...' : 'create snippet'}
-        </button>
+        <Button type="submit" disabled={submitting}>
+          {submitting ? (
+            <div className="flex flex-row items-center gap-2">
+              <Loader2 className="animate-spin" />
+              <p className="text-sm">creating...</p>
+            </div>
+          ) : (
+            'create snippet'
+          )}
+        </Button>
       </form>
     </div>
   );

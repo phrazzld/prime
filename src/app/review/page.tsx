@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth } from '@/app/auth-provider';
+import { Button } from '@/components/ui/button';
 import { supabaseBrowser } from '@/lib/supabaseClient';
 import { supermemo } from '@/lib/supermemo';
 import { useRouter } from 'next/navigation';
@@ -77,7 +78,7 @@ export default function ReviewPage() {
 
   if (!cardsDue.length) {
     return (
-      <div className="fade-in-up text-center">
+      <div className="max-w-3xl mx-auto p-4 fade-in-up">
         <h1 className="text-3xl font-serif font-semibold mb-4">review session</h1>
         <p className="text-sm">no cards due rn. nice work!</p>
       </div>
@@ -95,50 +96,45 @@ export default function ReviewPage() {
         card {currentIndex + 1} of {cardsDue.length}
       </p>
       <div className="card">
-        <div className="font-semibold mb-4 text-lg">
-          q: {currentCard.question_text}
+        <div className="mb-4">
+          <p className="mb-0">
+            question
+          </p>
+          <p className="font-semibold text-lg">{currentCard.question_text}</p>
         </div>
         {!showAnswer ? (
-          <button onClick={() => setShowAnswer(true)} className="btn btn-secondary text-sm">
+          <Button onClick={() => setShowAnswer(true)} variant="default">
             show answer
-          </button>
+          </Button>
         ) : (
           <>
-            <p className="mb-4">
-              <strong>a:</strong> {currentCard.answer_text}
-            </p>
+            <div className="flex flex-col mb-4">
+              <p className="mb-0">
+                answer
+              </p>
+              <p className="font-semibold text-lg">{currentCard.answer_text}</p>
+            </div>
             <p className="mb-4 font-medium">how well did you recall it?</p>
-            <div className="flex flex-col gap-1 w-full sm:w-2/3">
-              <button
+            <div className="flex flex-col gap-1 w-full sm:w-2/3 text-left">
+              <Button
                 onClick={() => handleRating(1)}
-                className="btn bg-red-500 hover:bg-red-600 text-white text-sm"
+                variant="outline"
+                className="w-full"
               >
                 1 - i forgot completely
-              </button>
-              <button
-                onClick={() => handleRating(2)}
-                className="btn bg-orange-400 hover:bg-orange-500 text-white text-sm"
-              >
+              </Button>
+              <Button onClick={() => handleRating(2)} variant="outline" className="w-full">
                 2 - i struggled
-              </button>
-              <button
-                onClick={() => handleRating(3)}
-                className="btn bg-yellow-400 hover:bg-yellow-500 text-white text-sm"
-              >
+              </Button>
+              <Button onClick={() => handleRating(3)} variant="outline" className="w-full">
                 3 - partial recall
-              </button>
-              <button
-                onClick={() => handleRating(4)}
-                className="btn bg-green-500 hover:bg-green-600 text-white text-sm"
-              >
+              </Button>
+              <Button onClick={() => handleRating(4)} variant="outline" className="w-full">
                 4 - mostly correct
-              </button>
-              <button
-                onClick={() => handleRating(5)}
-                className="btn bg-blue-500 hover:bg-blue-600 text-white text-sm"
-              >
+              </Button>
+              <Button onClick={() => handleRating(5)} variant="outline" className="w-full">
                 5 - perfect recall
-              </button>
+              </Button>
             </div>
           </>
         )}
