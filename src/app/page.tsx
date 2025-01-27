@@ -137,16 +137,16 @@ export default function HomePage() {
             <p className="text-sm mb-4">it’s time to review.</p>
             <div className="flex gap-3">
               <Button asChild>
-                <Link href="/review" className="btn btn-primary text-sm">
+                <Link href="/review" className="btn btn-primary">
                   start reviewing
                 </Link>
               </Button>
-              <Button asChild>
+              <Button asChild variant="outline">
                 <Link
                   href="/decks"
-                  className="text-sm underline hover:text-color-base"
+                  className="btn btn-secondary"
                 >
-                  manage decks →
+                  manage decks
                 </Link>
               </Button>
             </div>

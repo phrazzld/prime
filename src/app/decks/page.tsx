@@ -92,26 +92,24 @@ export default function DecksPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {decks.map((deck) => (
-          <Button key={deck.id} asChild>
-            <Link key={deck.id} href={`/decks/${deck.id}`}>
-              <div className="card cursor-pointer hover:shadow-md transition group">
-                <h2 className="text-xl font-serif font-semibold mb-2 group-hover:text-color-accent transition-colors">
-                  {deck.title}
-                </h2>
-                <p className="text-sm text-foreground/70 italic">
-                  {deck.description || "no description"}
-                </p>
-                <div className="mt-3 flex justify-between text-sm">
-                  <span>{deck.card_count ?? 0} cards</span>
-                  {deck.due_count && deck.due_count > 0 ? (
-                    <span className="text-color-accent">{deck.due_count} due</span>
-                  ) : (
-                    <span className="text-foreground/50">0 due</span>
-                  )}
-                </div>
+          <Link key={deck.id} href={`/decks/${deck.id}`}>
+            <div className="card cursor-pointer hover:shadow-md transition group">
+              <h2 className="text-xl font-serif font-semibold mb-2 group-hover:text-color-accent transition-colors">
+                {deck.title}
+              </h2>
+              <p className="text-sm text-foreground/70 italic">
+                {deck.description || "no description"}
+              </p>
+              <div className="mt-3 flex justify-between text-sm">
+                <span>{deck.card_count ?? 0} cards</span>
+                {deck.due_count && deck.due_count > 0 ? (
+                  <span className="text-color-accent">{deck.due_count} due</span>
+                ) : (
+                  <span className="text-foreground/50">0 due</span>
+                )}
               </div>
-            </Link>
-          </Button>
+            </div>
+          </Link>
         ))}
       </div>
     </section>
