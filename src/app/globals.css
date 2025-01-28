@@ -2,325 +2,118 @@
 @tailwind components;
 @tailwind utilities;
 
-/* root design tokens */
+/* root color variables for light mode */
 :root {
-  --background-light: #ffffff;
-  --foreground-light: #161616;
+  --background: 0 0% 100%; /* #ffffff */
+  --foreground: 220 9% 13%; /* #161616 */
 
-  --background-dark: #0e0e0e;
-  --foreground-dark: #eaeaea;
+  --card: 0 0% 100%;
+  --card-foreground: 220 9% 13%;
 
-  --color-base-light: #14213d; /* near-black navy */
-  --color-accent-light: #bfa15a; /* toned-down gold */
+  --primary: 240 5.9% 10%; /* #14213d */
+  --primary-foreground: 0 0% 98%; /* #fff */
 
-  /* if you want a different shade in dark mode, you can tweak here */
-  --color-base-dark: #14213d;
-  --color-accent-dark: #bfa15a;
+  --secondary: 38 85% 55%; /* #fca311 -> hsl(38,85%,55%) */
+  --secondary-foreground: 240 5.9% 10%;
 
-  --transition-duration: 0.25s;
-  --code-font: 'JetBrains Mono', monospace;
+  --accent: 38 85% 55%;
+  --accent-foreground: 240 5.9% 10%;
+
+  --muted: 210 5% 95%; /* #e5e5e5 */
+  --muted-foreground: 220 9% 13%;
+
+  --destructive: 0 84% 60%; /* #cc2936-ish */
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 220 5% 90%;
+  --input: 220 5% 90%;
+  --ring: 220 9% 13%;
+
+  --radius: 0.5rem;
 }
 
-/* theming */
-[data-theme='light'] {
-  --background: var(--background-light);
-  --foreground: var(--foreground-light);
-  --color-base: var(--color-base-light);
-  --color-accent: var(--color-accent-light);
-}
-
+/* override for dark mode */
 [data-theme='dark'] {
-  --background: var(--background-dark);
-  --foreground: var(--foreground-dark);
-  --color-base: var(--color-base-dark);
-  --color-accent: var(--color-accent-dark);
+  --background: 240 10% 4%; /* #0e0e0e-ish */
+  --foreground: 0 0% 90%; /* #eaeaea-ish */
+
+  --card: 240 10% 4%;
+  --card-foreground: 0 0% 90%;
+
+  --primary: 38 85% 55%; /* if you want gold-ish primary in dark mode, for instance */
+  --primary-foreground: 240 10% 4%;
+
+  --secondary: 240 5.9% 10%;
+  --secondary-foreground: 0 0% 90%;
+
+  --accent: 38 85% 55%;
+  --accent-foreground: 0 0% 10%;
+
+  --muted: 240 4.8% 15%;
+  --muted-foreground: 0 0% 90%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 90%;
+
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
 }
 
-/* universal styling */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', sans-serif;
-  line-height: 1.6;
-  transition:
-    background var(--transition-duration) ease,
-    color var(--transition-duration) ease;
-}
-
-/* headings: use playfair and swap colors in dark mode */
-h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 1rem;
-  line-height: 1.3;
-  font-weight: 600;
-  font-family: 'Playfair Display', serif;
-}
-
-/* light mode headings = navy; dark mode headings = foreground */
-[data-theme='light'] h1,
-[data-theme='light'] h2,
-[data-theme='light'] h3,
-[data-theme='light'] h4,
-[data-theme='light'] h5,
-[data-theme='light'] h6 {
-  color: var(--color-base);
-}
-[data-theme='dark'] h1,
-[data-theme='dark'] h2,
-[data-theme='dark'] h3,
-[data-theme='dark'] h4,
-[data-theme='dark'] h5,
-[data-theme='dark'] h6 {
-  color: var(--foreground);
-}
-
-/* code & pre blocks */
-code, pre {
-  font-family: var(--code-font);
-  background-color: rgba(0, 0, 0, 0.04);
-  color: var(--foreground);
-}
-
-/* links: gold in both modes; on hover, go navy in light mode, near-white in dark mode */
-a {
-  text-decoration: none;
-  transition:
-    color var(--transition-duration) ease,
-    transform 0.1s ease;
-}
-[data-theme='light'] a:not(.btn) {
-  color: var(--color-accent);
-}
-[data-theme='light'] a:not(.btn):hover {
-  color: var(--color-base); /* only applies to non-button links */
-}
-[data-theme='dark'] a {
-  color: var(--color-accent);
-}
-[data-theme='dark'] a:hover {
-  color: var(--foreground); /* near-white for contrast */
-}
-
-/* nav bar */
-nav {
-  background: var(--background);
-  box-shadow: 0 1px 0 rgba(0,0,0,0.08);
-  transition: background var(--transition-duration) ease;
-}
-nav a {
-  padding: 0.5rem 0;
-}
-
-/* buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.25rem;
-  padding: 0.65rem 1.4rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    background-color var(--transition-duration) ease,
-    color var(--transition-duration) ease,
-    transform 0.1s ease;
-}
-
-/* .btn-primary: always dark navy background, white text */
-.btn-primary {
-  background-color: var(--color-base);
-  color: #fff; /* ensures visibility in both light + dark */
-}
-.btn-primary:hover {
-  background-color: #1c2e57; /* slightly lighter navy, text still #fff */
-  color: #fff;
-  transform: scale(1.02);
-}
-
-[data-theme='light'] .btn-primary {
-  background-color: var(--color-base);
-  color: #fff; /* ensures visibility in both light + dark */
-}
-[data-theme='light'] .btn-primary:hover {
-  background-color: #1c2e57; /* slightly lighter navy, text still #fff */
-  color: #fff;
-  transform: scale(1.02);
-}
-[data-theme='dark'] .btn-primary {
-  background-color: var(--color-accent);
-  color: #000; /* ensures visibility in both light + dark */
-}
-[data-theme='dark'] .btn-primary:hover {
-  background-color: #bfa15a; /* slightly lighter gold, text still #000 */
-  color: #000;
-  transform: scale(1.02);
-}
-
-/* .btn-secondary: outline style.
-   in light mode, outline + text = navy, hover fill = navy.
-   in dark mode, outline + text = gold, hover fill = gold + text = black. */
-.btn-secondary {
-  background-color: transparent;
-  transition: transform 0.1s ease;
-}
-
-[data-theme='light'] .btn-secondary {
-  border: 1px solid var(--color-base);
-  color: var(--color-base);
-}
-[data-theme='light'] .btn-secondary:hover {
-  background-color: var(--color-base);
-  color: #fff;
-  transform: scale(1.02);
-}
-
-[data-theme='dark'] .btn-secondary {
-  border: 1px solid var(--color-accent);
-  color: var(--color-accent);
-}
-[data-theme='dark'] .btn-secondary:hover {
-  background-color: var(--color-accent);
-  color: #000;
-  transform: scale(1.02);
-}
-
-/* fade-in-up utility */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(4px);
+/* now let's ensure everything uses these tokens via tailwind or direct var usage */
+@layer base {
+  /* tailwind base */
+  body {
+    @apply bg-background text-foreground transition-colors duration-200;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans, Inter), sans-serif;
+    line-height: 1.6;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif, Playfair Display), serif;
+    margin: 0 0 1rem;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+    text-decoration: none;
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.4s ease forwards;
   }
 }
-.fade-in-up {
-  opacity: 0;
-  transform: translateY(4px);
-  animation: fadeInUp 0.4s ease forwards;
-}
 
-/* cards */
+/* example card classes using tailwind's color system */
 .card {
-  background: linear-gradient(to bottom right, #fafafa, #fdfdfd);
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-  transition:
-    box-shadow var(--transition-duration) ease,
-    transform var(--transition-duration) ease;
+  @apply bg-card text-card-foreground border border-border rounded-md p-6 transition-shadow;
 }
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* dark-mode card:
-   near-black but keep text bright for contrast */
-[data-theme='dark'] .card {
-  background: #141414;
-  border-color: rgba(255,255,255,0.1);
-  color: var(--foreground);
+/* example button classes: can also do your "btn" approach, but let's unify it with tailwind. */
+.btn {
+  @apply inline-flex items-center justify-center rounded-md px-4 py-2 font-medium transition-transform;
 }
 
-[data-theme='dark'] input {
-  color: var(--background);
+/* primary = typically uses 'bg-primary text-primary-foreground' in tailwind */
+.btn-primary {
+  @apply bg-primary text-primary-foreground;
+}
+.btn-primary:hover {
+  transform: scale(1.02);
 }
 
-/* alerts */
-.alert {
-  border-radius: 0.25rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
+/* secondary = outline style */
+.btn-secondary {
+  @apply bg-transparent border border-secondary text-secondary transition-colors;
 }
-
-/* modals */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(2px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background: var(--background);
-  border-radius: 0.25rem;
-  padding: 2rem;
-  min-width: 300px;
-  transform: scale(0.95);
-  animation: scaleIn 0.2s forwards ease;
-}
-
-@keyframes scaleIn {
-  to {
-    transform: scale(1);
-  }
-}
-
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-  }
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+.btn-secondary:hover {
+  @apply bg-secondary text-secondary-foreground;
+  transform: scale(1.02);
 }
