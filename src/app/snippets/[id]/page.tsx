@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/app/auth-provider';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { supabaseBrowser } from '@/lib/supabaseClient';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -120,8 +121,7 @@ export default function SnippetDetailPage() {
       {isEditing ? (
         <form onSubmit={saveEdits} className="card mb-4 flex flex-col gap-2">
           {errorMsg && <p className="text-red-600">{errorMsg}</p>}
-          <textarea
-            className="border p-2 w-full"
+          <Textarea
             rows={6}
             value={draftContent}
             onChange={(e) => setDraftContent(e.target.value)}

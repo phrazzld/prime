@@ -1,11 +1,12 @@
 'use client';
 
 import { useAuth } from '@/app/auth-provider';
-import { supabaseBrowser } from '@/lib/supabaseClient';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { supabaseBrowser } from '@/lib/supabaseClient';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function NewSnippetPage() {
   const { session, loading } = useAuth();
@@ -55,12 +56,11 @@ export default function NewSnippetPage() {
       <h1 className="text-2xl mb-4">create new snippet</h1>
       {errorMsg && <p className="text-red-600 mb-2">{errorMsg}</p>}
       <form onSubmit={createSnippet} className="flex flex-col gap-2 max-w-md">
-        <textarea
-          className="border p-2"
-          rows={6}
+        <Textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="enter your ephemeral snippet here..."
+          placeholder="what do you want to remember?"
+          rows={6}
         />
         <Button type="submit" disabled={submitting}>
           {submitting ? (
