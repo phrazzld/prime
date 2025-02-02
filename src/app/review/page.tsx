@@ -185,39 +185,35 @@ export default function ReviewPage() {
                 <Button
                   onClick={() => handleRating(1)}
                   variant="outline"
-                  className="w-1/5"
+                  className="w-1/5 active:animate-pop"
                 >
                   forgot
                 </Button>
-
                 <Button
                   onClick={() => handleRating(2)}
                   variant="outline"
-                  className="w-1/5"
+                  className="w-1/5 active:animate-pop"
                 >
                   struggled
                 </Button>
-
                 <Button
                   onClick={() => handleRating(3)}
                   variant="outline"
-                  className="w-1/5"
+                  className="w-1/5 active:animate-pop"
                 >
                   partial
                 </Button>
-
                 <Button
                   onClick={() => handleRating(4)}
                   variant="outline"
-                  className="w-1/5"
+                  className="w-1/5 active:animate-pop"
                 >
                   mostly correct
                 </Button>
-
                 <Button
                   onClick={() => handleRating(5)}
                   variant="outline"
-                  className="w-1/5"
+                  className="w-1/5 active:animate-pop"
                 >
                   perfect
                 </Button>

@@ -10,7 +10,6 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				// fundamental tokens (light mode by default) - can be overridden in css variables
 				"background": "hsl(var(--background) / <alpha-value>)",
 				"foreground": "hsl(var(--foreground) / <alpha-value>)",
 				"card": "hsl(var(--card) / <alpha-value>)",
@@ -45,9 +44,15 @@ export default {
 						transform: "translateY(0)",
 					},
 				},
+				pop: {
+					"0%": { transform: "scale(1)" },
+					"50%": { transform: "scale(0.95)" },
+					"100%": { transform: "scale(1)" },
+				},
 			},
 			animation: {
 				fadeInUp: "fadeInUp 0.4s ease forwards",
+				pop: "pop 0.15s ease-in-out",
 			},
 			borderRadius: {
 				lg: "var(--radius)",
