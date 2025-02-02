@@ -109,9 +109,8 @@
   transform: scale(1.02);
 }
 
-/* secondary = outline style */
 .btn-secondary {
-  @apply bg-transparent border border-secondary text-secondary transition-colors;
+  @apply bg-transparent border border-secondary text-secondary dark:border-secondary-foreground dark:text-secondary-foreground transition-colors;
 }
 .btn-secondary:hover {
   @apply bg-secondary text-secondary-foreground;
