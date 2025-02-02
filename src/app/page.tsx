@@ -119,12 +119,12 @@ export default function HomePage() {
               </p>
               <div className="flex gap-3">
                 <Button asChild>
-                  <Link href="/decks" className="btn btn-primary text-sm">
+                  <Link href="/decks" className="btn btn-primary">
                     explore decks
                   </Link>
                 </Button>
-                <Button asChild>
-                  <Link href="/snippets" className="btn btn-secondary text-sm">
+                <Button asChild variant="outline">
+                  <Link href="/snippets" className="btn btn-secondary">
                     add content
                   </Link>
                 </Button>
